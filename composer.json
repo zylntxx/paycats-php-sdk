@@ -1,0 +1,22 @@
+{
+    "name": "cmzz/paycats-php-sdk",
+    "description": "PHP sdk for paycats.cn.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cmzz",
+            "email": "me19@qq.com"
+        }
+    ],
+    "require": {
+        "rmccue/requests": "^1.7",
+        "phpunit/phpunit": "^8.1",
+        "mockery/mockery": "^1.2",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cmzz\\Paycats\\": "src"
+        }
+    }
+}
