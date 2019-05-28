@@ -30,6 +30,8 @@ class SignatureTest extends TestCase
         ];
 
         $this->key = 'ISu49mvhpcS';
+
+        // sign generated from https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=20_1
         $this->sign = '89A1F8E2CAEDB10102392B643B2318B8';
     }
 

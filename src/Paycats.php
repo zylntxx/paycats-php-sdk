@@ -57,6 +57,11 @@ class Paycats
         $this->options = array_merge($this->options, $options);
     }
 
+    public function getHttpClient()
+    {
+
+    }
+
     /**
      * 发起请求
      * @param Request $request
