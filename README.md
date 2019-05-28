@@ -26,7 +26,7 @@ $ composer require cmzz/paycats-php-sdk -vvv
 <?php
 
 use Cmzz\Paycats\Paycats;
-use Cmzz\Paycats\Requests\NativeRequest;
+use Cmzz\Paycats\Requests\NativePayRequest;
 
 $config = [
   'mch_id' => 'you app id',
@@ -37,7 +37,7 @@ $paycats = new Paycats($config);
 $data = [
   'out_order_no' => '1231111'  
 ];
-$request = new NativeRequest($data);
+$request = new NativePayRequest($data);
 
 try {
     $result = $paycats->exec($request);
@@ -59,6 +59,7 @@ if ($result['return_code'] === 0) {
 <?php
 
 use Cmzz\Paycats\Paycats;
+use Cmzz\Paycats\NotifyType;
 
 $config = [
   'mch_id' => 'you app id',
@@ -66,20 +67,25 @@ $config = [
 ];
 $paycats = new Paycats($config);
 
-$notifyData = $paycats->serve();
+$response = $paycats->serve(function ($notifyData) {
+    switch ($notifyData['notify_type']) {
+        case NotifyType::ORDER_SUCCEEDED:
+            // 订单支付成功通知
+            
+            break;
+            
+        case NotifyType::REFUND_SUCCEEDED:
+            // 订单退款成功 
+            
+            break;
+    }
+    
+    // 处理成功返回 true,  失败返回 false
+    return true;
+});
 
-switch ($notifyData['notify_type']) {
-    case \Cmzz\Paycats\NotifyType::ORDER_SUCCEEDED:
-        // 订单支付成功通知
-        
-        break;
-        
-    case \Cmzz\Paycats\NotifyType::REFUND_SUCCEEDED:
-        // 订单退款成功 
-        
-        break;
-}
-
+// 在 laravel 中，直接  return $response;
+return $response->send();
 ```
 
 ## License

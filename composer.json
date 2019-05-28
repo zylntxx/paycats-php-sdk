@@ -12,11 +12,15 @@
         "rmccue/requests": "^1.7",
         "phpunit/phpunit": "^8.1",
         "mockery/mockery": "^1.2",
-        "ext-json": "*"
+        "ext-json": "*",
+        "symfony/http-foundation": "^4.2"
     },
     "autoload": {
         "psr-4": {
             "Cmzz\\Paycats\\": "src"
         }
+    },
+    "scripts":{
+        "phpunit": "./vendor/bin/phpunit;"
     }
 }

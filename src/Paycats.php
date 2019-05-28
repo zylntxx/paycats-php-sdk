@@ -8,6 +8,7 @@ use Cmzz\Paycats\Exceptions\HttpException;
 use Cmzz\Paycats\Exceptions\InvalidConfigException;
 use Cmzz\Paycats\Exceptions\InvalidSignatureException;
 use Cmzz\Requests\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Paycats
 {
@@ -87,12 +88,13 @@ class Paycats
 
     /**
      * 处理通知请求
-     * @return array
+     * @param callable $callback
+     * @return Response
      * @throws InvalidSignatureException
      */
-    public function serve(): array
+    public function serve(callable $callback): Response
     {
-        $data = $_REQUEST;
+        $data = $_POST;
 
         if (isset($data['sign'])) {
             if (!Signature::verify($data, $this->config['key'])) {
@@ -100,7 +102,17 @@ class Paycats
             }
         }
 
-        return $data;
+        try {
+            $ret = $callback($data);
+
+            if ($ret) {
+                return new Response('success', 200);
+            }
+        } catch (\Exception $e) {
+            // no code
+        }
+
+        return new Response('fail', 500);
     }
 
     /**
