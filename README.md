@@ -1,5 +1,9 @@
 <h1 align="center"> paycats-php-sdk </h1>
-<p align="center">支付猫个人支付官方 PHP SDK.</p>
+<p align="center">
+支付猫个人支付官方 PHP SDK. 
+
+[![Build Status](https://travis-ci.com/paycats/paycats-php-sdk.svg?branch=master)](https://travis-ci.com/paycats/paycats-php-sdk)
+</p>
 
 ## Requirement
 
