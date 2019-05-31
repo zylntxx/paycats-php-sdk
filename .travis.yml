@@ -1,4 +1,4 @@
-if: branch =~ ^master|^development$|^internal$|^ci
+if: branch =~ ^master|^development
 language: php
 group: stable
 dist: trusty
