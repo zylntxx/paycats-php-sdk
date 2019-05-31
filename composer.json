@@ -22,5 +22,12 @@
     },
     "scripts":{
         "phpunit": "./vendor/bin/phpunit;"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Paycats\\Sdk\\ServiceProvider"
+            ]
+        }
     }
 }
