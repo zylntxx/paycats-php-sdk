@@ -23,7 +23,7 @@ abstract class Request
 
     function getMethod(): string
     {
-        return $this->method ?? \Requests::POST;
+        return $this->method ?? 'POST';
     }
 
     function getApi(): string
@@ -31,5 +31,8 @@ abstract class Request
         return $this->path;
     }
 
-    abstract function getData(): array ;
+    function getData(): array
+    {
+        return $this->data;
+    }
 }

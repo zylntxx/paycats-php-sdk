@@ -7,7 +7,9 @@ namespace Cmzz\Paycats;
 use Cmzz\Paycats\Exceptions\HttpException;
 use Cmzz\Paycats\Exceptions\InvalidConfigException;
 use Cmzz\Paycats\Exceptions\InvalidSignatureException;
-use Cmzz\Requests\Request;
+use Cmzz\Paycats\Requests\Request;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Response;
 
 class Paycats
@@ -15,11 +17,12 @@ class Paycats
     private $config;
     private $apiUrl = 'https://api.paycats.cn/v1/';
 
-    private $headers = [];
-    private $options = [];
-
-    /** @var Request */
-    private $request;
+    private $headers = [
+        'Content-Type' => 'application/json'
+    ];
+    private $options = [
+        'timeout'  => 5.0
+    ];
 
     /**
      * Paycats constructor.
@@ -48,18 +51,18 @@ class Paycats
         $this->headers = array_merge($this->headers, $headers);
     }
 
+    public function getHttpClient(): Client
+    {
+        return new Client($this->options);
+    }
+
     /**
      * 设置请求参数
      * @param array $options
      */
-    public function setHttpOptions(array $options)
+    public function setGuzzleOptions(array $options)
     {
         $this->options = array_merge($this->options, $options);
-    }
-
-    public function getHttpClient()
-    {
-
     }
 
     /**
@@ -67,6 +70,7 @@ class Paycats
      * @param Request $request
      * @return array
      * @throws HttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function exec(Request $request): array
     {
@@ -140,18 +144,20 @@ class Paycats
      * @param array $data
      * @return array
      * @throws HttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function doRequest(string $url, string $method, array $data): array
     {
-        try {
-            switch ($method) {
-                case \Requests::POST:
-                    $response = \Requests::POST($url, $this->headers, $data, $this->options);
-            }
+        $client = $this->getHttpClient();
 
-            /** @var \Requests_Response $response */
-            if ($response && $response->status_code === 200) {
-                $data = json_decode($response->body, true);
+        try {
+            $response = $client->request($method, $url, [
+                'headers' => $this->headers,
+                'json' => $data
+            ]);
+
+            if ($response && $response->getStatusCode() === 200) {
+                $data = json_decode($response->getBody()->getContents(), true);
 
                 if (isset($data['sign'])) {
                     if (!Signature::verify($data, $this->config['key'])) {
@@ -163,7 +169,16 @@ class Paycats
             }
 
             throw new HttpException('接口请求失败');
-        } catch (\Exception $exception) {
+        }
+        catch (RequestException $exception) {
+            if ($exception->hasResponse()) {
+                /** @var \GuzzleHttp\Psr7\Response $response */
+                $response = $exception->getResponse();
+
+                return \GuzzleHttp\json_decode($response->getBody()->getContents(), true);
+            }
+        }
+        catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }

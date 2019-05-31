@@ -14,7 +14,7 @@ class NativePayRequest extends Request
     function getData(): array
     {
         if (
-            !(isset($this->data['total_fee']) && $this->data['total_fee'] > 1) ||
+            !(isset($this->data['total_fee']) && $this->data['total_fee'] >= 1) ||
             !(isset($this->data['out_trade_no']) && $this->data['out_trade_no']) ||
             !(isset($this->data['body']) && $this->data['body'])
         ) {

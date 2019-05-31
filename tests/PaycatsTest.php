@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Cmzz\Paycats\Tests;
 
-use Cmzz\Paycats\Exceptions\InvalidArgumentException;
 use Cmzz\Paycats\Exceptions\InvalidConfigException;
 use Cmzz\Paycats\Paycats;
+use Cmzz\Paycats\Requests\NativePayRequest;
+use Cmzz\Paycats\Signature;
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +29,26 @@ class PaycatsTest extends TestCase
             'key' => '23848adkff'
         ];
         $this->paycats = new Paycats($this->config);
+    }
+
+    public function testGetHttpClient()
+    {
+        $paycats = new Paycats($this->config);
+
+        $this->assertInstanceOf(Client::class, $paycats->getHttpClient());
+    }
+
+    public function testSetOptions()
+    {
+        $paycats = new Paycats($this->config);
+
+        $client = $paycats->getHttpClient();
+        $this->assertEquals(5.0, $client->getConfig('timeout'));
+
+        $paycats->setGuzzleOptions([
+            'timeout' => 3.0
+        ]);
+        $this->assertEquals(3.0, $paycats->getHttpClient()->getConfig('timeout'));
     }
 
     public function testPaycatsConfigCheck()
@@ -54,8 +76,18 @@ class PaycatsTest extends TestCase
     public function testWebHookServeResponse()
     {
         $_POST = [
-
+            'notify_type' => 'order.succeeded',
+            'mch_id' => '162934501',
+            'order_no' => 'test-1',
+            'total_fee' => 1,
+            'out_trade_no' => 'test-order-18481',
+            'transaction_id' => 'wx31104343363224e94c710861839676',
+            'pay_at' => '2019-05-31 08:58:02',
+            'openid' => '1817731063682b',
         ];
+
+        //　因为 signature 已经验证过了，这里默认是可靠
+        $_POST['sign'] = Signature::make($_POST, $this->config['key']);
 
         $response = $this->paycats->serve(function ($data) {
             return true;
@@ -66,7 +98,14 @@ class PaycatsTest extends TestCase
     public function testWebHookReturnFail()
     {
         $_POST = [
-
+            'notify_type' => 'order.succeeded',
+            'mch_id' => '162934501',
+            'order_no' => 'test-1',
+            'total_fee' => 1,
+            'out_trade_no' => 'test-order-18481',
+            'transaction_id' => 'wx31104343363224e94c710861839676',
+            'pay_at' => '2019-05-31 08:58:02',
+            'openid' => '1817731063682b',
         ];
 
         $response = $this->paycats->serve(function ($data) {
@@ -80,11 +119,19 @@ class PaycatsTest extends TestCase
     public function testWebHookReturnSuccess()
     {
         $_POST = [
-
+            'notify_type' => 'order.succeeded',
+            'mch_id' => '162934501',
+            'order_no' => 'test-1',
+            'total_fee' => 1,
+            'out_trade_no' => 'test-order-18481',
+            'transaction_id' => 'wx31104343363224e94c710861839676',
+            'pay_at' => '2019-05-31 08:58:02',
+            'openid' => '1817731063682b',
         ];
 
         $response = $this->paycats->serve(function ($data) {
-            return false;
+            $this->assertEquals($_POST, $data);
+            return true;
         });
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -93,6 +140,50 @@ class PaycatsTest extends TestCase
 
     public function testNativePay()
     {
+        $body = [
+            'return_code' => 0,
+            'return_message' => "success",
+            'mch_id' => 1584527981,
+            'order_no' => "215807456977212777",
+            'out_trade_no' => "test-3741018489",
+            'total_fee' => 1,
+            'code_url' => "",
+            'qrcode' => "",
+        ];
+        $body['sign'] = Signature::make($body, $this->config['key']);
 
+        $response = new \GuzzleHttp\Psr7\Response(200, [
+            'application/json'
+        ], \GuzzleHttp\json_encode($body));
+
+        $data = [
+            'mch_id' => "1584527981",
+            'total_fee' => "1",
+            'out_trade_no' => "test-3741018489",
+            'body' => "test",
+        ];
+
+        $request = new NativePayRequest($data);
+
+        $client = \Mockery::mock(Client::class, [
+            [
+                'timeout'  => 5.0
+            ]
+        ]);
+        $client->allows()
+            ->request('POST', 'https://api.paycats.cn/v1/pay/wx/native',
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json'
+                    ],
+                    'json' => array_merge($data, ['sign' => Signature::make($data, $this->config['key'])])
+                ]
+            )
+            ->andReturn($response);
+
+        $m = \Mockery::mock(Paycats::class, [$this->config])->makePartial();
+        $m->allows()->getHttpClient()->andReturn($client);
+
+        $this->assertEquals($body, $m->exec($request));
     }
 }
