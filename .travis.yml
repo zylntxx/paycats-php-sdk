@@ -1,0 +1,16 @@
+if: branch =~ ^master|^development$|^internal$|^ci
+language: php
+group: stable
+dist: trusty
+os: linux
+sudo: required
+php:
+  - 7.2.18
+
+install:
+  - pip install awscli --upgrade --user
+  - composer install
+  - php artisan key:generate --env=testing
+
+script:
+  - composer run-script phpunit
