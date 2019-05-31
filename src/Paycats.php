@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats;
+namespace Paycats\Sdk;
 
-use Cmzz\Paycats\Exceptions\HttpException;
-use Cmzz\Paycats\Exceptions\InvalidConfigException;
-use Cmzz\Paycats\Exceptions\InvalidSignatureException;
-use Cmzz\Paycats\Requests\Request;
+use Paycats\Sdk\Exceptions\HttpException;
+use Paycats\Sdk\Exceptions\InvalidConfigException;
+use Paycats\Sdk\Exceptions\InvalidSignatureException;
+use Paycats\Sdk\Requests\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats\Exceptions;
+namespace Paycats\Sdk\Exceptions;
 
 class Exception extends \Exception
 {

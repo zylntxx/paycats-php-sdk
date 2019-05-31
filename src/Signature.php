@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats;
+namespace Paycats\Sdk;
 
 
-use Cmzz\Paycats\Exceptions\InvalidSignatureException;
+use Paycats\Sdk\Exceptions\InvalidSignatureException;
 
 class Signature
 {

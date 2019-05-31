@@ -25,8 +25,8 @@ $ composer require cmzz/paycats-php-sdk -vvv
 ```php
 <?php
 
-use Cmzz\Paycats\Paycats;
-use Cmzz\Paycats\Requests\NativePayRequest;
+use Paycats\Sdk\Paycats;
+use Paycats\Sdk\Requests\NativePayRequest;
 
 $config = [
   'mch_id' => 'you app id',
@@ -41,7 +41,7 @@ $request = new NativePayRequest($data);
 
 try {
     $result = $paycats->exec($request);
-} catch (\Cmzz\Paycats\Exceptions\Exception $exception) {
+} catch (\Paycats\Sdk\Exceptions\Exception $exception) {
     // 异常
     echo $exception->getMessage();
 }
@@ -58,8 +58,8 @@ if ($result['return_code'] === 0) {
 ```php
 <?php
 
-use Cmzz\Paycats\Paycats;
-use Cmzz\Paycats\NotifyType;
+use Paycats\Sdk\Paycats;
+use Paycats\Sdk\NotifyType;
 
 $config = [
   'mch_id' => 'you app id',

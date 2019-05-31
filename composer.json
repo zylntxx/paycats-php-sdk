@@ -1,5 +1,5 @@
 {
-    "name": "cmzz/paycats-php-sdk",
+    "name": "paycats/paycats-php-sdk",
     "description": "PHP sdk for paycats.cn.",
     "license": "MIT",
     "authors": [
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Cmzz\\Paycats\\": "src"
+            "Paycats\\Sdk\\": "src"
         }
     },
     "scripts":{

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats\Requests;
+namespace Paycats\Sdk\Requests;
 
-use Cmzz\Paycats\Exceptions\InvalidArgumentException;
+use Paycats\Sdk\Exceptions\InvalidArgumentException;
 
 class OrderRequest extends Request
 {

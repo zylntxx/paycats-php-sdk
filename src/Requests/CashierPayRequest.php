@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats\Requests;
+namespace Paycats\Sdk\Requests;
 
-use Cmzz\Paycats\Api;
-use Cmzz\Paycats\Exceptions\InvalidArgumentException;
+use Paycats\Sdk\Api;
+use Paycats\Sdk\Exceptions\InvalidArgumentException;
 
 class CashierPayRequest extends Request
 {

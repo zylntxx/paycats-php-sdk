@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats\Requests;
+namespace Paycats\Sdk\Requests;
 
-use Cmzz\Paycats\Api;
+use Paycats\Sdk\Api;
 
 class F2FPayPayRequest extends NativePayRequest
 {

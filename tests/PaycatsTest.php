@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats\Tests;
+namespace Paycats\Sdk\Tests;
 
-use Cmzz\Paycats\Exceptions\InvalidConfigException;
-use Cmzz\Paycats\Paycats;
-use Cmzz\Paycats\Requests\NativePayRequest;
-use Cmzz\Paycats\Signature;
+use Paycats\Sdk\Exceptions\InvalidConfigException;
+use Paycats\Sdk\Paycats;
+use Paycats\Sdk\Requests\NativePayRequest;
+use Paycats\Sdk\Signature;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;

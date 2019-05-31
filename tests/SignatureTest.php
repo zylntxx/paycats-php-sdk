@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Cmzz\Paycats\Tests;
+namespace Paycats\Sdk\Tests;
 
-use Cmzz\Paycats\Exceptions\InvalidSignatureException;
-use Cmzz\Paycats\Signature;
+use Paycats\Sdk\Exceptions\InvalidSignatureException;
+use Paycats\Sdk\Signature;
 use PHPUnit\Framework\TestCase;
 
 class SignatureTest extends TestCase
