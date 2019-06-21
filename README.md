@@ -39,8 +39,13 @@ $config = [
 $paycats = new Paycats($config);
 
 $data = [
-  'out_order_no' => '1231111'  
+    'mch_id' => '162934501',
+    'total_fee' => 1,
+    'out_trade_no' => 'test-order-18481',
+    'sign' => '',
+    'body' => '',
 ];
+
 $request = new NativePayRequest($data);
 
 try {
