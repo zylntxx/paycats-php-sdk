@@ -19,7 +19,7 @@
 ## Installing
 
 ```shell
-$ composer require cmzz/paycats-php-sdk -vvv
+$ composer require paycats/paycats-php-sdk -vvv
 ```
 
 ## Usage
